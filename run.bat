@@ -1,0 +1,1 @@
+.\bin\windows-Debug-x86_64\Game.exe
