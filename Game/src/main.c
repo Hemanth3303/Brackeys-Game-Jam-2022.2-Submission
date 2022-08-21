@@ -2,6 +2,10 @@
 
 #include <stdlib.h>
 
+/*
+* REMEMBER: Theme is "Your're not Alone"
+*/
+
 int main(void) {
 
 	Game *game;

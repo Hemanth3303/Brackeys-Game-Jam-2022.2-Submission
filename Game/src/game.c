@@ -3,8 +3,8 @@
 void init(Game *game) {
 	glfwInit();
 
-	game->width=640;
-	game->height=480;
+	game->width=800;
+	game->height=600;
 	game->title="Game";
 	game->is_running=true;
 
