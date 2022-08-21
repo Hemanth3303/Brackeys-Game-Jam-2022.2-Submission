@@ -3,6 +3,8 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include "shader.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -11,6 +13,7 @@ typedef struct Game {
 	int width, height;
 	const char *title;
 	bool is_running;
+	Shader *basic_shader;
 }Game;
 
 
