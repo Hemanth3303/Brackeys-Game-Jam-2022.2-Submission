@@ -1,4 +1,4 @@
-workspace "OpenGL-Project-Template"
+workspace "Brackeys-Game-Jam-8"
 	configurations { "Debug", "Release" }
 	platforms { "x64" }
 	startproject "Game"

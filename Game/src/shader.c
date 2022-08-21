@@ -1,7 +1,6 @@
 #include "shader.h"
 
 void shader_init(Shader *shader, const char *vs_filename, const char *fs_filename) {
-	shader=(Shader *)calloc(1, sizeof(Shader));
 	char *vs_source, *fs_source;
 	GLuint vs_id, fs_id;
 
@@ -11,15 +10,31 @@ void shader_init(Shader *shader, const char *vs_filename, const char *fs_filenam
 
 	FILE *fptr;
 	fptr=fopen(vs_filename, "rt");
+	if (!fptr) { 
+		printf("couldn't open vs file\n");
+		return;
+	}
+	fseek(fptr, 0L, SEEK_END);
 	length=ftell(fptr);
+	fseek(fptr, 0L, SEEK_SET);
 	vs_source=(char *)calloc(length, sizeof(char));
-	fread(vs_source, sizeof(char), length, fptr);
+	if (vs_source) {
+		fread(vs_source, sizeof(char), length, fptr);
+	}
 	fclose(fptr);
 
 	fptr=fopen(fs_filename, "rt");
-	length=ftell(fptr);
+	if (!fptr) {
+		printf("couldn't open fs file\n");
+		return;
+	}
+	fseek(fptr, 0L, SEEK_END);
+	length = ftell(fptr);
+	fseek(fptr, 0L, SEEK_SET);
 	fs_source=(char *)calloc(length, sizeof(char));
-	fread(fs_source, sizeof(char), length, fptr);
+	if(fs_source) {
+		fread(fs_source, sizeof(char), length, fptr);
+	}
 	fclose(fptr);
 	
 	vs_id=glCreateShader(GL_VERTEX_SHADER);
@@ -56,14 +71,12 @@ void shader_init(Shader *shader, const char *vs_filename, const char *fs_filenam
 	glDeleteShader(vs_id);
 	glDeleteShader(fs_id);
 
+	glUseProgram(shader->shader_id);
+
 	free((void *)vs_source);
 	free((void *)fs_source);
 }
 
 void shader_use(Shader *shader) {
 	glUseProgram(shader->shader_id);
-}
-
-void shader_deinit(Shader *shader) {
-	free((void *)shader);
 }

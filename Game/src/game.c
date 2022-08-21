@@ -44,7 +44,8 @@ void game_init(Game *game) {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	//temp: start
-	shader_init(game->basic_shader, "Game/res/shaders/basic_vert.glsl", "Game/res/shaders/basic_frag.glsl");
+	game->basic_shader=(Shader *)calloc(1, sizeof(Shader));
+	shader_init(game->basic_shader, "./res/shaders/basic_vert.glsl", "./res/shaders/basic_frag.glsl");
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 
@@ -86,9 +87,7 @@ void game_render(Game *game) {
 }
 
 void game_deinit(Game *game) {
-
-	shader_deinit(game->basic_shader);
-
+	free(game->basic_shader);
 	glfwTerminate();
 }
 
