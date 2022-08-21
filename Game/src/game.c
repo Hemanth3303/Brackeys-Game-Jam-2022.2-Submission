@@ -1,6 +1,6 @@
 #include "game.h"
 
-void init(Game *game) {
+void game_init(Game *game) {
 	glfwInit();
 
 	game->width=800;
@@ -31,26 +31,26 @@ void init(Game *game) {
 
 }
 
-void handleInputs(Game *game) {
+void game_handle_inputs(Game *game) {
 	if(glfwGetKey(game->window, GLFW_KEY_ESCAPE)==GLFW_PRESS) {
 		glfwSetWindowShouldClose(game->window, true);
 	}
 	glfwPollEvents();
 }
 
-void update(Game *game) {
+void game_update(Game *game) {
 	if(glfwWindowShouldClose(game->window)) {
 		game->is_running=false;
 	}
 }
 
-void render(Game *game) {
+void game_render(Game *game) {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glfwSwapBuffers(game->window);
 }
 
-void deinit(Game *game) {
+void game_deinit(Game *game) {
 	glfwTerminate();
 }
 

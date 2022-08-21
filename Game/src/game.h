@@ -14,10 +14,10 @@ typedef struct Game {
 }Game;
 
 
-void init(Game *game);
-void handleInputs(Game *game);
-void update(Game *game);
-void render(Game *game);
-void deinit(Game *game);
+void game_init(Game *game);
+void game_handle_inputs(Game *game);
+void game_update(Game *game);
+void game_render(Game *game);
+void game_deinit(Game *game);
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
