@@ -1,9 +1,11 @@
 #include "renderable2d.h"
 
 void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 color, Shader *shader) {
-	memcpy(renderable->position, position, 3);
-	memcpy(renderable->size, size, 2);
-	memcpy(renderable->color, color, 4);
+	memcpy(renderable->position, position, 3*sizeof(float));
+	memcpy(renderable->size, size, 2*sizeof(float));
+	memcpy(renderable->color, color, 4*sizeof(float));
+	
+	renderable->shader=shader;
 
 	renderable->vertex_array=(Vertex_Array *)calloc(1, sizeof(Vertex_Array));
 	vertex_array_init(renderable->vertex_array);

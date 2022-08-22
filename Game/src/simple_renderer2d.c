@@ -19,19 +19,24 @@ void simple_renderer2d_submit(Simple_Renderer2D* simple_renderer2d, Renderable2D
 void simple_renderer2d_flush(Simple_Renderer2D* simple_renderer2d) {
 	size_t render_queue_size=cc_deque_size(simple_renderer2d->render_queue);
 	while(render_queue_size!=0) {
-		Renderable2D *renderable=(Renderable2D *)calloc(1, sizeof(Renderable2D));
-		cc_deque_remove_at(simple_renderer2d->render_queue, render_queue_size, (void **)&renderable);
+		Renderable2D renderable;
+		void *ptr;
+		cc_deque_remove_first(simple_renderer2d->render_queue, &ptr);
+		render_queue_size=cc_deque_size(simple_renderer2d->render_queue);
 
-		vertex_array_bind(renderable->vertex_array);//segfault?
-		index_buffer_bind(renderable->index_buffer);
+		renderable=*((Renderable2D *)ptr);
+		
+		vertex_array_bind(renderable.vertex_array);
+		index_buffer_bind(renderable.index_buffer);
 		mat4 model_matrix;
 		glm_mat4_identity(model_matrix);
-		glm_translate(model_matrix, renderable->position);
+		glm_translate(model_matrix, renderable.position);
 
-		shader_set_uniform_mat4f(renderable->shader, "model_matrix", model_matrix);
-		glDrawElements(GL_TRIANGLES, renderable->index_buffer->count, GL_UNSIGNED_INT, NULL);
+		shader_set_uniform_mat4f(renderable.shader, "model_matrix", model_matrix);
+		glDrawElements(GL_TRIANGLES, renderable.index_buffer->count, GL_UNSIGNED_INT, NULL);
 
 		index_buffer_unbind();
 		vertex_array_unbind();
+
 	}
 }
