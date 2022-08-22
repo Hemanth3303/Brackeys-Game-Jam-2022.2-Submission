@@ -148,7 +148,8 @@ project "Game"
 		"%{prj.location}/src",
 		"vendor/glfw/include",
 		"vendor/glad/include/",
-		"vendor/stb_image/include"
+		"vendor/stb_image/include",
+		"vendor/cglm/include"
 	}
 
 	links { "glfw", "glad", "stb_image" }

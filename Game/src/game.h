@@ -13,7 +13,6 @@ typedef struct Game {
 	int width, height;
 	const char *title;
 	bool is_running;
-	Shader *basic_shader;
 }Game;
 
 

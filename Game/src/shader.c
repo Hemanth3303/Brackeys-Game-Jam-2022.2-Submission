@@ -57,26 +57,58 @@ void shader_init(Shader *shader, const char *vs_filename, const char *fs_filenam
 		printf("Error: Fragment Shader Compilation Error:\n%s\n", infoLog);
 	}
 
-	shader->shader_id=glCreateProgram();
-	glAttachShader(shader->shader_id, vs_id);
-	glAttachShader(shader->shader_id, fs_id);
-	glLinkProgram(shader->shader_id);
+	shader->id=glCreateProgram();
+	glAttachShader(shader->id, vs_id);
+	glAttachShader(shader->id, fs_id);
+	glLinkProgram(shader->id);
 
-	glGetProgramiv(shader->shader_id, GL_LINK_STATUS, &succes);
+	glGetProgramiv(shader->id, GL_LINK_STATUS, &succes);
 	if(!succes) {
-		glGetProgramInfoLog(shader->shader_id, 1024, NULL, infoLog);
+		glGetProgramInfoLog(shader->id, 1024, NULL, infoLog);
 		printf("Error: Shader Program Linking Error:\n%s\n", infoLog);
 	}
 
 	glDeleteShader(vs_id);
 	glDeleteShader(fs_id);
 
-	glUseProgram(shader->shader_id);
+	glUseProgram(shader->id);
 
 	free((void *)vs_source);
 	free((void *)fs_source);
 }
 
-void shader_use(Shader *shader) {
-	glUseProgram(shader->shader_id);
+void shader_enable(Shader *shader) {
+	glUseProgram(shader->id);
+}
+
+void shader_disable(Shader *shader) {
+	glUseProgram(0);
+}
+
+GLint shader_get_uniform_location(Shader *shader, const GLchar *name) {
+	return glGetUniformLocation(shader->id, name);
+}
+
+void shader_set_uniform1i(Shader *shader, const GLchar *name, GLint value) {
+	glUniform1i(shader_get_uniform_location(shader, name), value);
+}
+
+void shader_set_uniform1f(Shader *shader, const GLchar *name, GLfloat value) {
+	glUniform1f(shader_get_uniform_location(shader, name), value);
+}
+
+void shader_set_uniform2f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y) {
+	glUniform2f(shader_get_uniform_location(shader, name), x, y);
+}
+
+void shader_set_uniform3f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y, GLfloat z) {
+	glUniform3f(shader_get_uniform_location(shader, name), x, y, z);
+}
+
+void shader_set_uniform4f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
+	glUniform4f(shader_get_uniform_location(shader, name), x, y, z, w);
+}
+
+void shader_set_uniform_mat4f(Shader *shader, const GLchar *name, GLfloat *matrix) {
+	glUniformMatrix4fv(shader_get_uniform_location(shader, name), 1, GL_FALSE, matrix);
 }
