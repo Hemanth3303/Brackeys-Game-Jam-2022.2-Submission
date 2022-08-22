@@ -1,18 +1,16 @@
 #pragma once
 
 #include "glad/glad.h"
+#include "cc_array.h"
 
 #include "buffer.h"
 
-#include <stdlib.h>
 #include <stdio.h>
-
-#define MAX_BUFFER_SIZE 1000
 
 typedef struct Vertex_Array {
 	GLuint id;
 	int current_size;
-	Buffer *buffers[MAX_BUFFER_SIZE];
+	CC_Array *buffers;
 }Vertex_Array;
 
 void vertex_array_init(Vertex_Array *vertex_array);

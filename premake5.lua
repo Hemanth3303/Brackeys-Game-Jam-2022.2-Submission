@@ -118,8 +118,22 @@ project "stb_image"
 	staticruntime "Off"
 	systemversion "latest"
 
-	files { "%{prj.location}/src/stb_image.c" }
+	files { "%{prj.location}/src/stb_image.c", "%{prj.location}/include/stb_image.h" }
 	includedirs { "%{prj.location}/include/" }
+
+project "collections-c"
+	kind "StaticLib"
+	language "C"
+	cdialect "C17"
+	cppdialect "C++20"
+	location "%{wks.location}/vendor/collections-c"
+	targetdir("%{wks.location}/bin/" ..outputdir)
+	objdir ("%{wks.location}/bin-int/" ..outputdir)
+	staticruntime "Off"
+	systemversion "latest"
+
+	files { "%{prj.location}/src/**.c", "%{prj.location}/src/**.h", }
+	includedirs { "%{prj.location}/src/include" }
 
 project "Game"
 	location "%{wks.location}/Game"
@@ -149,10 +163,11 @@ project "Game"
 		"vendor/glfw/include",
 		"vendor/glad/include/",
 		"vendor/stb_image/include",
-		"vendor/cglm/include"
+		"vendor/cglm/include",
+		"vendor/collections-c/src/include"
 	}
 
-	links { "glfw", "glad", "stb_image" }
+	links { "glfw", "glad", "stb_image", "collections-c" }
 
 	filter { "configurations:Debug", "system:windows", "action:vs*" }
 		defines { "_CRT_SECURE_NO_WARNINGS" }
