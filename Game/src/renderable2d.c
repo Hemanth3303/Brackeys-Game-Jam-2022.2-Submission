@@ -24,13 +24,13 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 		color[0], color[1], color[2], color[3]
 	};
 
-	Buffer *vertex_buffer=(Buffer *)calloc(1, sizeof(Buffer));
-	buffer_init(vertex_buffer, vertices, 4*3, 3);
-	Buffer *color_buffer=(Buffer *)calloc(1, sizeof(Buffer));
-	buffer_init(color_buffer, colors, 4*4, 4);
+	Buffer vertex_buffer;
+	Buffer color_buffer;
+	buffer_init(&vertex_buffer, vertices, 4*3, 3);
+	buffer_init(&color_buffer, colors, 4*4, 4);
 
-	vertex_array_add_buffer(renderable->vertex_array, vertex_buffer, 0);
-	vertex_array_add_buffer(renderable->vertex_array, color_buffer, 1);
+	vertex_array_add_buffer(renderable->vertex_array, &vertex_buffer, 0);
+	vertex_array_add_buffer(renderable->vertex_array, &color_buffer, 1);
 
 	GLuint indices[]={
 		0, 1, 2,
@@ -44,4 +44,5 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 
 void renderable_deinit(Renderable2D *renderable) {
 	free((void *)renderable->vertex_array);
+	free((void *)renderable->index_buffer);
 }

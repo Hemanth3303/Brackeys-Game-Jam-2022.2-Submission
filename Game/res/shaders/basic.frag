@@ -9,7 +9,9 @@ in DATA {
 	vec4 color;
 }fs_in;
 
+const int INTENSITY_SCALE=30;
+
 void main() {
-	float intensity=1.0f/length(fs_in.position.xy-light_position);
-	color=fs_in.color*intensity;
+	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
+	color=(fs_in.color)*intensity;
 }

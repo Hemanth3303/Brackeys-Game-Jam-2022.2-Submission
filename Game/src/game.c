@@ -35,7 +35,9 @@ void game_init(Game *game) {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 	mat4 ortho;
-	glm_ortho(0.0f, 16.0f, 0.0f, 9.0f, -1.0f, 1.0f, ortho);
+	//x->0 to width left to right
+	//y->0 to height from top to bottom
+	glm_ortho(0.0f, game->width, game->height, 0.0f, -1.0f, 1.0f, ortho);
 
 	game->shader=(Shader *)calloc(1, sizeof(Shader));
 	game->renderer=(Simple_Renderer2D *)calloc(1, sizeof(Simple_Renderer2D));
@@ -46,8 +48,11 @@ void game_init(Game *game) {
 	shader_enable(game->shader);
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 
-	game->sprite=(Renderable2D *)calloc(1, sizeof(Renderable2D));
-	renderable_init(game->sprite, (vec3){5, 5, 0}, (vec2){4, 4}, (vec4){1, 0, 1, 1}, game->shader);
+	game->sprite1=(Renderable2D *)calloc(1, sizeof(Renderable2D));
+	renderable_init(game->sprite1, (vec3){game->width/2, game->height/2, 0}, (vec2){150, 100}, (vec4){1, 0, 0, 1}, game->shader);
+
+	game->sprite2=(Renderable2D *)calloc(1, sizeof(Renderable2D));
+	renderable_init(game->sprite2, (vec3){100, 120, 0}, (vec2){180, 300}, (vec4){0, 0, 1, 1}, game->shader);
 }
 
 void game_handle_inputs(Game *game) {
@@ -69,14 +74,21 @@ void game_render(Game *game) {
 	float x=game->mouse_position[0];
 	float y=game->mouse_position[1];
 
-	shader_set_uniform2f(game->shader,"light_position", (vec2){x*16.0f/game->width, 9.0f-y*9.0f/game->height});
-	simple_renderer2d_submit(game->renderer, game->sprite);
+	shader_set_uniform2f(game->shader,"light_position", (vec2){x, y});
+	simple_renderer2d_submit(game->renderer, game->sprite1);
+	simple_renderer2d_submit(game->renderer, game->sprite2);
 	simple_renderer2d_flush(game->renderer);
 
 	glfwSwapBuffers(game->window);
 }
 
 void game_deinit(Game *game) {
+
+	free((void *)game->shader);
+	free((void *)game->sprite1);
+	free((void *)game->sprite2);
+	free((void *)game->renderer);
+
 	glfwTerminate();
 }
 
