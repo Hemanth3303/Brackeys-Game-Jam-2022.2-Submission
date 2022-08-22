@@ -97,18 +97,18 @@ void shader_set_uniform1f(Shader *shader, const GLchar *name, GLfloat value) {
 	glUniform1f(shader_get_uniform_location(shader, name), value);
 }
 
-void shader_set_uniform2f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y) {
-	glUniform2f(shader_get_uniform_location(shader, name), x, y);
+void shader_set_uniform2f(Shader *shader, const GLchar *name, vec2 vector) {
+	glUniform2f(shader_get_uniform_location(shader, name), vector[0], vector[1]);
 }
 
-void shader_set_uniform3f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y, GLfloat z) {
-	glUniform3f(shader_get_uniform_location(shader, name), x, y, z);
+void shader_set_uniform3f(Shader *shader, const GLchar *name, vec3 vector) {
+	glUniform3f(shader_get_uniform_location(shader, name), vector[0], vector[1], vector[2]);
 }
 
-void shader_set_uniform4f(Shader *shader, const GLchar *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
-	glUniform4f(shader_get_uniform_location(shader, name), x, y, z, w);
+void shader_set_uniform4f(Shader *shader, const GLchar *name, vec4 vector) {
+	glUniform4f(shader_get_uniform_location(shader, name), vector[0], vector[1], vector[2], vector[3]);
 }
 
-void shader_set_uniform_mat4f(Shader *shader, const GLchar *name, GLfloat *matrix) {
+void shader_set_uniform_mat4f(Shader *shader, const GLchar *name, mat4 matrix) {
 	glUniformMatrix4fv(shader_get_uniform_location(shader, name), 1, GL_FALSE, matrix);
 }
