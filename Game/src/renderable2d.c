@@ -6,6 +6,7 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 	memcpy(renderable->color, color, 4);
 
 	renderable->vertex_array=(Vertex_Array *)calloc(1, sizeof(Vertex_Array));
+	vertex_array_init(renderable->vertex_array);
 
 	GLfloat vertices[]={
 		0, 0, 0,
