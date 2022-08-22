@@ -59,7 +59,6 @@ void game_init(Game *game) {
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (void *)(3*sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
-
 	//temp: end
 }
 

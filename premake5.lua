@@ -107,6 +107,20 @@ project "glad"
 	files { "%{prj.location}/src/glad.c" }
 	includedirs { "%{prj.location}/include/" }
 
+project "stb_image"
+	kind "StaticLib"
+	language "C"
+	cdialect "C17"
+	cppdialect "C++20"
+	location "%{wks.location}/vendor/stb_image"
+	targetdir("%{wks.location}/bin/" ..outputdir)
+	objdir ("%{wks.location}/bin-int/" ..outputdir)
+	staticruntime "Off"
+	systemversion "latest"
+
+	files { "%{prj.location}/src/stb_image.c" }
+	includedirs { "%{prj.location}/include/" }
+
 project "Game"
 	location "%{wks.location}/Game"
 	language "C++"
@@ -133,10 +147,11 @@ project "Game"
 	includedirs {
 		"%{prj.location}/src",
 		"vendor/glfw/include",
-		"vendor/glad/include/"
+		"vendor/glad/include/",
+		"vendor/stb_image/include"
 	}
 
-	links { "glfw", "glad" }
+	links { "glfw", "glad", "stb_image" }
 
 	filter { "configurations:Debug", "system:windows", "action:vs*" }
 		defines { "_CRT_SECURE_NO_WARNINGS" }
