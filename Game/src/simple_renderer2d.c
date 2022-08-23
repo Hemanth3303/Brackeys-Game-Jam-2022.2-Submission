@@ -33,6 +33,7 @@ void simple_renderer2d_flush(Simple_Renderer2D* simple_renderer2d) {
 		glm_translate(model_matrix, renderable.position);
 
 		shader_set_uniform_mat4f(renderable.shader, "model_matrix", model_matrix);
+		texture_bind(&renderable.texture);
 		glDrawElements(GL_TRIANGLES, renderable.index_buffer->count, GL_UNSIGNED_INT, NULL);
 
 		index_buffer_unbind();

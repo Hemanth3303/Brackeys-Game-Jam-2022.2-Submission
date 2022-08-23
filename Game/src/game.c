@@ -48,11 +48,9 @@ void game_init(Game *game) {
 	shader_enable(game->shader);
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 
-	game->sprite1=(Renderable2D *)calloc(1, sizeof(Renderable2D));
-	renderable_init(game->sprite1, (vec3){game->width/2, game->height/2, 0}, (vec2){150, 100}, (vec4){1, 0, 0, 1}, game->shader);
+	renderable_init(&(game->sprite1), (vec3){game->width/2, game->height/2, 0}, (vec2){150, 100}, (vec4){1, 0, 0, 1}, game->shader, "res/sprites/dirt.png");
 
-	game->sprite2=(Renderable2D *)calloc(1, sizeof(Renderable2D));
-	renderable_init(game->sprite2, (vec3){100, 120, 0}, (vec2){180, 300}, (vec4){0, 0, 1, 1}, game->shader);
+	renderable_init(&(game->sprite2), (vec3){100, 120, 0}, (vec2){180, 300}, (vec4){0, 0, 1, 1}, game->shader, "res/sprites/block.png");
 }
 
 void game_handle_inputs(Game *game) {
@@ -66,6 +64,7 @@ void game_update(Game *game) {
 	if(glfwWindowShouldClose(game->window)) {
 		game->is_running=false;
 	}
+	game->sprite1.position[0]+=0.01;
 }
 
 void game_render(Game *game) {
@@ -75,8 +74,9 @@ void game_render(Game *game) {
 	float y=game->mouse_position[1];
 
 	shader_set_uniform2f(game->shader,"light_position", (vec2){x, y});
-	simple_renderer2d_submit(game->renderer, game->sprite1);
-	simple_renderer2d_submit(game->renderer, game->sprite2);
+	shader_set_uniform1i(game->shader, "tex", 0);
+	simple_renderer2d_submit(game->renderer, &(game->sprite1));
+	simple_renderer2d_submit(game->renderer, &(game->sprite2));
 	simple_renderer2d_flush(game->renderer);
 
 	glfwSwapBuffers(game->window);
@@ -84,9 +84,11 @@ void game_render(Game *game) {
 
 void game_deinit(Game *game) {
 
+	renderable_deinit(&(game->sprite1));
+	renderable_deinit(&(game->sprite2));
+	simple_renderer2d_deinit(game->renderer);
+
 	free((void *)game->shader);
-	free((void *)game->sprite1);
-	free((void *)game->sprite2);
 	free((void *)game->renderer);
 
 	glfwTerminate();
