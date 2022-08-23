@@ -24,7 +24,7 @@ typedef struct Game {
 
 void game_init(Game *game);
 void game_handle_inputs(Game *game);
-void game_update(Game *game);
+void game_update(Game *game, float dt);
 void game_render(Game *game);
 void game_deinit(Game *game);
 

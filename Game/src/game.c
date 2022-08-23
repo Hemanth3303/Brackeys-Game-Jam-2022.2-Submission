@@ -59,7 +59,7 @@ void game_handle_inputs(Game *game) {
 	glfwPollEvents();
 }
 
-void game_update(Game *game) {
+void game_update(Game *game, float dt) {
 	if(glfwWindowShouldClose(game->window)) {
 		game->is_running=false;
 	}
