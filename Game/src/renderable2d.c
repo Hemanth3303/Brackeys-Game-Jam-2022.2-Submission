@@ -5,8 +5,11 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 	memcpy(renderable->size, size, 2*sizeof(float));
 	memcpy(renderable->color, color, 4*sizeof(float));
 	
-	renderable->shader=shader;
+	if(shader!=NULL){
+		renderable->shader=shader;
+	}
 	
+	shader_enable(renderable->shader);
 	glActiveTexture(GL_TEXTURE0);
 	texture_init(&renderable->texture, texture_filename);
 	texture_bind(&renderable->texture);
@@ -53,6 +56,7 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 
 	renderable->index_buffer=(Index_Buffer *)calloc(1, sizeof(Index_Buffer));
 	index_buffer_init(renderable->index_buffer, indices, 6);
+	shader_disable();
 
 }
 
