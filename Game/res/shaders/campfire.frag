@@ -2,7 +2,7 @@
 
 layout (location=0) out vec4 color;
 
-uniform vec2 light_position;
+uniform vec2 c_light_position;
 
 in DATA {
 	vec4 position;
@@ -10,13 +10,13 @@ in DATA {
 	vec2 texCoord;
 }fs_in;
 
-uniform sampler2D tex;
+uniform sampler2D c_tex;
 
-const float INTENSITY_SCALE=10;
+const float INTENSITY_SCALE=30;
 
 void main() {
-	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
-	vec4 texColor=texture(tex, fs_in.texCoord);
+	float intensity=1.0f/length(fs_in.position.xy-c_light_position)*INTENSITY_SCALE;
+	vec4 texColor=texture(c_tex, fs_in.texCoord);
 	
 	//color=fs_in.color*intensity;
 

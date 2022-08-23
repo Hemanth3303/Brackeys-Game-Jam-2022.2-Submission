@@ -29,10 +29,11 @@ void simple_renderer2d_flush(Simple_Renderer2D* simple_renderer2d) {
 		vertex_array_bind(renderable.vertex_array);
 		index_buffer_bind(renderable.index_buffer);
 		mat4 model_matrix;
+
+		shader_enable(renderable.shader);
 		glm_mat4_identity(model_matrix);
 		glm_translate(model_matrix, renderable.position);
 
-		shader_enable(renderable.shader);
 		shader_set_uniform_mat4f(renderable.shader, "model_matrix", model_matrix);
 		texture_bind(&renderable.texture);
 		glDrawElements(GL_TRIANGLES, renderable.index_buffer->count, GL_UNSIGNED_INT, NULL);

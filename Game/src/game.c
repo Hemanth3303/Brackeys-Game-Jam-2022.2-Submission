@@ -90,11 +90,12 @@ void game_render(Game *game) {
 	shader_disable();
 
 	shader_enable(game->campfire_sprite.shader);
-	shader_set_uniform2f(game->campfire_sprite.shader,"light_position", (vec2){game->width/2-64/2, game->height/1.6});
-	shader_set_uniform1i(game->campfire_sprite.shader, "tex", 0);
+	//game->width/2-64/2, game->height/1.6
+	shader_set_uniform2f(game->campfire_sprite.shader,"c_light_position", (vec2){x*800/game->width, y*600/game->height});
+	shader_set_uniform1i(game->campfire_sprite.shader, "c_tex", 0);
 	shader_disable();
 
-	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
+	// simple_renderer2d_submit(game->renderer, &game->bg_sprite);
 	simple_renderer2d_submit(game->renderer, &game->campfire_sprite);
 
 	simple_renderer2d_flush(game->renderer);
