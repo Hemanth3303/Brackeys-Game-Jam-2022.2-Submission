@@ -48,7 +48,7 @@ void game_init(Game *game) {
 	shader_enable(game->shader);
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 
-	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){0, 0, 0, 1}, game->shader, "res/sprites/floor.png");
+	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
 
 }
 
@@ -71,7 +71,8 @@ void game_render(Game *game) {
 	float x=game->mouse_position[0];
 	float y=game->mouse_position[1];
 
-	shader_set_uniform2f(game->shader,"light_position", (vec2){x, y});
+	//to correct light position when window is stretched x*initial_width/current_width, y*initial_hieght/current_height
+	shader_set_uniform2f(game->shader,"light_position", (vec2){x*800/game->width, y*600/game->height});
 	shader_set_uniform1i(game->shader, "tex", 0);
 
 	simple_renderer2d_submit(game->renderer, &game->bg_sprite);

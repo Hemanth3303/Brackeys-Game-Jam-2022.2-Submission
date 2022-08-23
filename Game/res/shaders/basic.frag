@@ -12,10 +12,10 @@ in DATA {
 
 uniform sampler2D tex;
 
-const int INTENSITY_SCALE=30;
+const float INTENSITY_SCALE=20;
 
 void main() {
 	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
-	// color=fs_in.color*intensity;
-	color=texture(tex, fs_in.texCoord);
+	//color=fs_in.color*intensity;
+	color=texture(tex, fs_in.texCoord)*fs_in.color*intensity;
 }
