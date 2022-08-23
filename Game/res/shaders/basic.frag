@@ -16,6 +16,14 @@ const float INTENSITY_SCALE=20;
 
 void main() {
 	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
+	vec4 texColor=texture(tex, fs_in.texCoord);
+	
 	//color=fs_in.color*intensity;
-	color=texture(tex, fs_in.texCoord)*fs_in.color*intensity;
+	// color=texColor*fs_in.color*intensity;
+
+	// if(texColor.a<0.1) {
+	// 	discard;
+	// }
+
+	color=texColor;	
 }

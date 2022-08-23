@@ -23,7 +23,7 @@ int main(void) {
 		prev=now;
 		now=glfwGetTime();
 
-		printf("%.2f\n", 1/dt);
+		// printf("%.2f fps\n", 1/dt);
 	}
 	game_deinit(game);
 

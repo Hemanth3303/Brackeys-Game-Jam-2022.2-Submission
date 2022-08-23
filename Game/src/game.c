@@ -8,6 +8,7 @@ void game_init(Game *game) {
 	game->title="Game";
 	game->is_running=true;
 
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -33,6 +34,7 @@ void game_init(Game *game) {
 
 	glViewport(0, 0, game->width, game->height);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glEnable(GL_BLEND);
 
 	mat4 ortho;
 	//x->0 to width left to right
@@ -49,6 +51,7 @@ void game_init(Game *game) {
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 
 	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
+	renderable_init(&game->campfire_sprite, (vec3){game->width/2-64/2, game->height/1.6, 0}, (vec2){64, 72}, (vec4){0, 0, 0, 1}, game->shader, "res/sprites/fire.png");
 
 }
 
@@ -76,6 +79,7 @@ void game_render(Game *game) {
 	shader_set_uniform1i(game->shader, "tex", 0);
 
 	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
+	simple_renderer2d_submit(game->renderer, &game->campfire_sprite);
 
 	simple_renderer2d_flush(game->renderer);
 
@@ -85,6 +89,7 @@ void game_render(Game *game) {
 void game_deinit(Game *game) {
 
 	renderable_deinit(&game->bg_sprite);
+	renderable_deinit(&game->campfire_sprite);
 	simple_renderer2d_deinit(game->renderer);
 
 	free((void *)game->shader);
