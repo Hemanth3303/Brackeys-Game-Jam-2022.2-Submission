@@ -11,19 +11,27 @@ in DATA {
 }fs_in;
 
 uniform sampler2D tex;
+uniform int lighting_type=0;
 
-const float INTENSITY_SCALE=10;
+const float INTENSITY_SCALE=20;
 
 void main() {
 	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
 	vec4 texColor=texture(tex, fs_in.texCoord);
 	
-	//color=fs_in.color*intensity;
+	color=fs_in.color;
 
 	if(texColor.a<0.1) {
 		discard;
 	}
 
 	// color=texColor;
-	color=texColor*fs_in.color*intensity;
+
+	if(lighting_type==0) {
+		color=texColor*fs_in.color*intensity*vec4(0, 0.6, 0.6, 1);
+	}
+	else {
+		color=texColor*fs_in.color*intensity*vec4(0.1, 0, 0, 1);
+	}
+
 }

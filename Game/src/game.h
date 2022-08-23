@@ -6,6 +6,7 @@
 #include "renderable2d.h"
 #include "simple_renderer2d.h"
 #include "shader.h"
+#include "states.h"
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,10 +16,15 @@ typedef struct Game {
 	int width, height;
 	const char *title;
 	bool is_running;
+	vec3 mouse_position;
+	
 	Shader *shader;
 	Simple_Renderer2D *renderer;
 	Renderable2D bg_sprite;
-	vec2 mouse_position;
+	Renderable2D player;
+	States state;
+	Player_States player_state;
+
 }Game;
 
 
