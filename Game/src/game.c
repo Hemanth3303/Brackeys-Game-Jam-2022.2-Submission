@@ -54,7 +54,6 @@ void game_init(Game *game) {
 	shader_disable();
 
 	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
-	renderable_init(&game->campfire_sprite, (vec3){game->width/2-64/2, game->height/1.6, 0}, (vec2){64, 72}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/fire.png");
 
 }
 
@@ -84,7 +83,6 @@ void game_render(Game *game) {
 	shader_disable();
 
 	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
-	simple_renderer2d_submit(game->renderer, &game->campfire_sprite);
 
 	simple_renderer2d_flush(game->renderer);
 
@@ -94,7 +92,6 @@ void game_render(Game *game) {
 void game_deinit(Game *game) {
 
 	renderable_deinit(&game->bg_sprite);
-	renderable_deinit(&game->campfire_sprite);
 	simple_renderer2d_deinit(game->renderer);
 
 	free((void *)game->shader);

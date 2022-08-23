@@ -18,7 +18,6 @@ typedef struct Game {
 	Shader *shader;
 	Simple_Renderer2D *renderer;
 	Renderable2D bg_sprite;
-	Renderable2D campfire_sprite;
 	vec2 mouse_position;
 }Game;
 
