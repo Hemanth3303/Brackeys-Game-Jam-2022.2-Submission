@@ -13,7 +13,7 @@ in DATA {
 uniform sampler2D tex;
 uniform int lighting_type=0;
 
-const float INTENSITY_SCALE=20;
+const float INTENSITY_SCALE=30;
 
 void main() {
 	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;
@@ -28,10 +28,13 @@ void main() {
 	// color=texColor;
 
 	if(lighting_type==0) {
-		color=texColor*fs_in.color*intensity*vec4(0, 0.6, 0.6, 1);
+		color=texColor*fs_in.color*intensity;
+	}
+	else if(lighting_type==1) {
+		color=texColor*fs_in.color*intensity*vec4(1, 0, 0.5, 1);
 	}
 	else {
-		color=texColor*fs_in.color*intensity*vec4(0.1, 0, 0, 1);
+		color=texColor;
 	}
 
 }

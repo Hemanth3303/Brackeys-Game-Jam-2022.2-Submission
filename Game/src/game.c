@@ -8,7 +8,7 @@ void game_init(Game *game) {
 	game->title="Game";
 	game->is_running=true;
 	game->state=PLAY;
-	game->player_state=LIGHT_ON;
+	game->player_state=NORMAL;
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -79,11 +79,11 @@ void game_handle_inputs(Game *game) {
 	}
 
 	if(glfwGetKey(game->window, GLFW_KEY_F)==GLFW_PRESS) {
-		game->player_state=LIGHT_ON;
+		game->player_state=NORMAL;
 	}
 
 	if(glfwGetKey(game->window, GLFW_KEY_G)==GLFW_PRESS) {
-		game->player_state=LIGHT_OFF;
+		game->player_state=SEARCH;
 	}
 
 	glfwPollEvents();
@@ -117,7 +117,8 @@ void game_render(Game *game) {
 	//to correct light position when window is stretched x*initial_width/current_width, y*initial_hieght/current_height
 	shader_set_uniform2f(game->shader,"light_position", (vec2){x*800/game->width, y*600/game->height});
 	shader_set_uniform1i(game->shader, "tex", 0);
-	shader_set_uniform1i(game->shader, "lighting_type", game->player_state);
+	int light_state=game->player_state-1;
+	shader_set_uniform1i(game->shader, "lighting_type", light_state);
 
 	shader_disable();
 

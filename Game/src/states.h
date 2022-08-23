@@ -8,6 +8,7 @@ typedef enum States {
 }States;
 
 typedef enum Player_States {
-	LIGHT_OFF=0,
-	LIGHT_ON,
+	OUT=0,
+	NORMAL,
+	SEARCH,
 }Player_States;
