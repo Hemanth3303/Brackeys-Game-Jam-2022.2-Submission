@@ -17,8 +17,7 @@ typedef struct Game {
 	bool is_running;
 	Shader *shader;
 	Simple_Renderer2D *renderer;
-	Renderable2D sprite1;
-	Renderable2D sprite2;
+	Renderable2D bg_sprite;
 	vec2 mouse_position;
 }Game;
 

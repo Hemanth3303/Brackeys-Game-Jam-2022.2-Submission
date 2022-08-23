@@ -196,3 +196,4 @@ project "Game"
 		links { "winmm", "kernel32", "opengl32", "kernel32", "gdi32" }
 	filter "system:linux"
 		links {"pthread", "GL", "m", "dl", "rt", "X11"}
+

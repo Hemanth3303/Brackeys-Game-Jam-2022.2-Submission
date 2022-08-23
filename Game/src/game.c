@@ -48,9 +48,8 @@ void game_init(Game *game) {
 	shader_enable(game->shader);
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 
-	renderable_init(&(game->sprite1), (vec3){game->width/2, game->height/2, 0}, (vec2){150, 100}, (vec4){1, 0, 0, 1}, game->shader, "res/sprites/dirt.png");
+	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){0, 0, 0, 1}, game->shader, "res/sprites/floor.png");
 
-	renderable_init(&(game->sprite2), (vec3){100, 120, 0}, (vec2){180, 300}, (vec4){0, 0, 1, 1}, game->shader, "res/sprites/block.png");
 }
 
 void game_handle_inputs(Game *game) {
@@ -64,7 +63,6 @@ void game_update(Game *game) {
 	if(glfwWindowShouldClose(game->window)) {
 		game->is_running=false;
 	}
-	game->sprite1.position[0]+=0.01;
 }
 
 void game_render(Game *game) {
@@ -75,8 +73,9 @@ void game_render(Game *game) {
 
 	shader_set_uniform2f(game->shader,"light_position", (vec2){x, y});
 	shader_set_uniform1i(game->shader, "tex", 0);
-	simple_renderer2d_submit(game->renderer, &(game->sprite1));
-	simple_renderer2d_submit(game->renderer, &(game->sprite2));
+
+	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
+
 	simple_renderer2d_flush(game->renderer);
 
 	glfwSwapBuffers(game->window);
@@ -84,8 +83,7 @@ void game_render(Game *game) {
 
 void game_deinit(Game *game) {
 
-	renderable_deinit(&(game->sprite1));
-	renderable_deinit(&(game->sprite2));
+	renderable_deinit(&game->bg_sprite);
 	simple_renderer2d_deinit(game->renderer);
 
 	free((void *)game->shader);
