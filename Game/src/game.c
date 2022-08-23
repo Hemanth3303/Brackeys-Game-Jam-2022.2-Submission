@@ -42,12 +42,10 @@ void game_init(Game *game) {
 	glm_ortho(0.0f, game->width, game->height, 0.0f, -1.0f, 1.0f, ortho);
 
 	game->shader=(Shader *)calloc(1, sizeof(Shader));
-	game->campfire_sprite.shader=(Shader *)calloc(1, sizeof(Shader));
 
 	game->renderer=(Simple_Renderer2D *)calloc(1, sizeof(Simple_Renderer2D));
 	
-	shader_init(game->shader, "res/shaders/basic.vert", "res/shaders/basic.frag");
-	shader_init(game->campfire_sprite.shader, "res/shaders/campfire.vert", "res/shaders/campfire.frag");
+	shader_init(game->shader, "res/shaders/game.vert", "res/shaders/game.frag");
 
 	simple_renderer2d_init(game->renderer);
 
@@ -55,12 +53,8 @@ void game_init(Game *game) {
 	shader_set_uniform_mat4f(game->shader, "projection_matrix", ortho);
 	shader_disable();
 
-	shader_enable(game->campfire_sprite.shader);
-	shader_set_uniform_mat4f(game->campfire_sprite.shader, "projection_matrix", ortho);
-	shader_disable();
-
 	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
-	renderable_init(&game->campfire_sprite, (vec3){game->width/2-64/2, game->height/1.6, 0}, (vec2){64, 72}, (vec4){0, 0, 0, 1}, NULL, "res/sprites/fire.png");
+	renderable_init(&game->campfire_sprite, (vec3){game->width/2-64/2, game->height/1.6, 0}, (vec2){64, 72}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/fire.png");
 
 }
 
@@ -89,13 +83,7 @@ void game_render(Game *game) {
 	shader_set_uniform1i(game->shader, "tex", 0);
 	shader_disable();
 
-	shader_enable(game->campfire_sprite.shader);
-	//game->width/2-64/2, game->height/1.6
-	shader_set_uniform2f(game->campfire_sprite.shader,"c_light_position", (vec2){x*800/game->width, y*600/game->height});
-	shader_set_uniform1i(game->campfire_sprite.shader, "c_tex", 0);
-	shader_disable();
-
-	// simple_renderer2d_submit(game->renderer, &game->bg_sprite);
+	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
 	simple_renderer2d_submit(game->renderer, &game->campfire_sprite);
 
 	simple_renderer2d_flush(game->renderer);
@@ -110,7 +98,6 @@ void game_deinit(Game *game) {
 	simple_renderer2d_deinit(game->renderer);
 
 	free((void *)game->shader);
-	free((void *)game->campfire_sprite.shader);
 	free((void *)game->renderer);
 
 	glfwTerminate();

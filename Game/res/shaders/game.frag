@@ -25,5 +25,5 @@ void main() {
 	}
 
 	// color=texColor;
-	color=texColor*fs_in.color*intensity;
+	color=texColor*fs_in.color*intensity*campfire_light;
 }
