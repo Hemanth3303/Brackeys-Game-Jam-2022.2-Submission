@@ -1,6 +1,11 @@
 #include "game.h"
 
+//yes all the game logic code is in one file, please don't judge me
+//i am too tired from opengl-ing atm
+
 void game_init(Game *game) {
+	srand(time(NULL));
+	
 	glfwInit();
 
 	game->width=800;
@@ -8,7 +13,7 @@ void game_init(Game *game) {
 	game->title="Game";
 	game->is_running=true;
 	game->state=PLAY;
-	game->player_state=NORMAL;
+	game->player_state=OUT;
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -57,6 +62,17 @@ void game_init(Game *game) {
 
 	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
 	renderable_init(&game->player, game->mouse_position, (vec2){40, 40}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/player.png");
+
+	cc_array_new(&game->coins);
+
+	for(int i=0; i<COIN_COUNT; i++) {
+		float x=rand()%(game->width-64);
+		float y=rand()%(game->height-64);
+		Renderable2D *coin=(Renderable2D *)calloc(1, sizeof(Renderable2D));
+		renderable_init(coin, (vec3){x, y, 0}, (vec2){64, 64}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/coin.png");
+		cc_array_add(game->coins, (void *)coin);
+	}
+
 }
 
 void game_handle_inputs(Game *game) {
@@ -104,6 +120,19 @@ void game_update(Game *game, float dt) {
 		glfwSetInputMode(game->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
+	if(game->player_state==NORMAL) {
+		for(int i=0; i<COIN_COUNT; i++) {
+			if(cc_array_size(game->coins)) {
+				Renderable2D *coin;
+				cc_array_get_at(game->coins, i, (void *)&coin);
+				if(game->player.position[0]+game->player.size[0]-9>coin->position[0]+11 && game->player.position[0]+9<coin->position[0]+coin->size[0]-11 && game->player.position[1]-9+game->player.size[1]>coin->position[1]+11 && game->player.position[1]+9<coin->position[1]+coin->size[1]-7) {
+					cc_array_remove_at(game->coins, i, (void *)coin);
+					renderable_deinit(coin);
+				}
+			}
+		}
+	}
+
 }
 
 void game_render(Game *game) {
@@ -123,6 +152,17 @@ void game_render(Game *game) {
 	shader_disable();
 
 	simple_renderer2d_submit(game->renderer, &game->bg_sprite);
+
+	if(game->player_state==NORMAL) {
+		if(cc_array_size(game->coins)) {
+			for(int i=0; i<COIN_COUNT; i++) {
+				void *ptr;
+				cc_array_get_at(game->coins, i, &ptr);
+				simple_renderer2d_submit(game->renderer, (Renderable2D *)ptr);
+			}
+		}
+	}
+
 	simple_renderer2d_submit(game->renderer, &game->player);
 
 	simple_renderer2d_flush(game->renderer);
@@ -134,6 +174,12 @@ void game_deinit(Game *game) {
 
 	renderable_deinit(&game->bg_sprite);
 	renderable_deinit(&game->player);
+	for(int i=0; i<COIN_COUNT; i++) {
+		void *ptr;
+		cc_array_get_at(game->coins, i, &ptr);
+		free(ptr);
+	}
+	cc_array_destroy(game->coins);
 	simple_renderer2d_deinit(game->renderer);
 
 	free((void *)game->shader);

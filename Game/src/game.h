@@ -2,6 +2,7 @@
 
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "cc_array.h"
 
 #include "renderable2d.h"
 #include "simple_renderer2d.h"
@@ -10,6 +11,9 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <time.h>
+
+#define COIN_COUNT 20
 
 typedef struct Game {
 	GLFWwindow *window;
@@ -22,6 +26,7 @@ typedef struct Game {
 	Simple_Renderer2D *renderer;
 	Renderable2D bg_sprite;
 	Renderable2D player;
+	CC_Array *coins;
 	States state;
 	Player_States player_state;
 

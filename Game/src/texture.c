@@ -1,7 +1,6 @@
 #include "texture.h"
 
 void texture_init(Texture *texture, const char *filename) {
-	stbi_set_flip_vertically_on_load(true);
 	unsigned char *data=stbi_load(filename, &(texture->width), &(texture->height), &(texture->nr_channels), 0);
 
 	glGenTextures(1, &(texture->id));
@@ -14,7 +13,6 @@ void texture_init(Texture *texture, const char *filename) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	stbi_image_free(data);
-	stbi_set_flip_vertically_on_load(false);
 }
 
 void texture_bind(Texture *texture) {

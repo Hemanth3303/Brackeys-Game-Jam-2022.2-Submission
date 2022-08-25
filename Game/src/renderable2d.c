@@ -32,10 +32,10 @@ void renderable_init(Renderable2D *renderable, vec3 position, vec2 size, vec4 co
 	};
 
 	GLfloat tex_coords[]={
-		1.0f, 1.0f,
-		1.0f, 0.0f,
 		0.0f, 0.0f,
 		0.0f, 1.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f,
 	};
 
 	Buffer vertex_buffer;
