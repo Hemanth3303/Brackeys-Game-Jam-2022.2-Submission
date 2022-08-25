@@ -10,7 +10,7 @@ void game_init(Game *game) {
 
 	game->width=800;
 	game->height=600;
-	game->title="Game";
+	game->title="Light-Robo";
 	game->is_running=true;
 	game->state=PLAY;
 	game->player_state=OUT;

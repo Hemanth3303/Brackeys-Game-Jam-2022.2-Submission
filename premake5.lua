@@ -164,7 +164,7 @@ project "Game"
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
 	staticruntime "Off"
 	systemversion "latest"
-	targetname "Game"
+	targetname "Light-Robo"
 
 	vpaths {
 		["Header Files"] = { "**.h", "**.hpp"},
