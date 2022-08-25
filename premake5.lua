@@ -16,6 +16,26 @@ outputdir = "%{cfg.system}-%{cfg.buildcfg}-%{cfg.architecture}"
 	filter "platforms:x64"
 		architecture "x86_64"
 
+	newaction {
+		trigger = "clean",
+		description = "Remove all binaries, intermediates and build files",
+		execute=function()
+			print("Removing binaries")
+			os.rmdir("./bin")
+			print("Removing intermediates")
+			os.rmdir("./bin-int")
+			print("Removing build files")
+			os.rmdir("./.vs")
+			os.remove("**.sln")
+			os.remove("**.vcxproj.**")
+			os.remove("**Makefile**")
+			os.remove("**.workspace")
+			os.remove("**.project")
+			print("Done")
+		end
+	}
+		
+
 project "glfw"
 	location "%{wks.location}/vendor/glfw"
 	language "C"
