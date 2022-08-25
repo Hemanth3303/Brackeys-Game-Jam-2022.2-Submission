@@ -184,7 +184,7 @@ project "Game"
 		"vendor/glad/include/",
 		"vendor/stb/include",
 		"vendor/cglm/include",
-		"vendor/collections-c/src/include"
+		"vendor/collections-c/src/include",
 	}
 
 	links { "glfw", "glad", "stb", "collections-c" }
