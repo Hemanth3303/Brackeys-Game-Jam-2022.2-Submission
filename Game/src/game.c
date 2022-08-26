@@ -62,6 +62,9 @@ void game_init(Game *game) {
 
 	renderable_init(&game->bg_sprite, (vec3){0, 0, 0}, (vec2){game->width, game->height}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/floor.png");
 	renderable_init(&game->player, game->mouse_position, (vec2){40, 40}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/player.png");
+	renderable_init(&game->enemy, (vec3){rand()%(game->width-64), rand()%(game->height-64)}, (vec2){64, 64}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/enemy.png");
+	renderable_init(&game->win_pic, (vec3){game->width/2-512/2, game->height/2-128/2, 0}, (vec2){512, 128}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/win.png");
+	renderable_init(&game->loose_pic, (vec3){game->width/2-512/2, game->height/2-128/2, 0}, (vec2){512, 128}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/loose.png");
 
 	cc_array_new(&game->coins);
 
@@ -94,11 +97,11 @@ void game_handle_inputs(Game *game) {
 		}
 	}
 
-	if(glfwGetKey(game->window, GLFW_KEY_F)==GLFW_PRESS) {
+	if(glfwGetKey(game->window, GLFW_KEY_F)==GLFW_PRESS && game->state==PLAY) {
 		game->player_state=NORMAL;
 	}
 
-	if(glfwGetKey(game->window, GLFW_KEY_G)==GLFW_PRESS) {
+	if(glfwGetKey(game->window, GLFW_KEY_G)==GLFW_PRESS && game->state==PLAY) {
 		game->player_state=SEARCH;
 	}
 
@@ -113,11 +116,24 @@ void game_update(Game *game, float dt) {
 	if(game->state==PLAY) {
 		glfwSetInputMode(game->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		
-		game->player.position[0]=game->mouse_position[0];
-		game->player.position[1]=game->mouse_position[1];
+		game->player.position[0]=(glm_lerp(game->player.position[0], game->mouse_position[0], 0.02));
+		game->player.position[1]=(glm_lerp(game->player.position[1], game->mouse_position[1], 0.02));
 	}
 	else {
 		glfwSetInputMode(game->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
+	if(game->state==PLAY) {
+		game->enemy.position[0]=glm_lerp(game->enemy.position[0], game->player.position[0], 0.0003);
+		game->enemy.position[1]=glm_lerp(game->enemy.position[1], game->player.position[1], 0.0003);
+	}
+	
+	if(game->state!=WIN
+	&& game->player.position[0]+game->player.size[0]-9>game->enemy.position[0]+16
+	&& game->player.position[0]+9<game->enemy.position[0]+game->enemy.size[0]-16
+	&& game->player.position[1]+game->player.size[1]-9>game->enemy.position[1]+16
+	&& game->player.position[1]+9<game->enemy.position[1]+game->enemy.size[1]-16) {
+		game->state=LOOSE;
 	}
 
 	if(game->player_state==NORMAL) {
@@ -131,6 +147,11 @@ void game_update(Game *game, float dt) {
 				}
 			}
 		}
+	}
+
+	if(cc_array_size(game->coins)==0) {
+		game->state==WIN;
+		printf("win\n");
 	}
 
 }
@@ -162,8 +183,17 @@ void game_render(Game *game) {
 			}
 		}
 	}
-
+	if(game->player_state==SEARCH) {
+		simple_renderer2d_submit(game->renderer, &game->enemy);
+	}
 	simple_renderer2d_submit(game->renderer, &game->player);
+
+	if(game->state==WIN) {
+		simple_renderer2d_submit(game->renderer, &game->win_pic);
+	}
+	if(game->state==LOOSE) {
+		simple_renderer2d_submit(game->renderer, &game->loose_pic);
+	}
 
 	simple_renderer2d_flush(game->renderer);
 
@@ -174,6 +204,9 @@ void game_deinit(Game *game) {
 
 	renderable_deinit(&game->bg_sprite);
 	renderable_deinit(&game->player);
+	renderable_deinit(&game->enemy);
+	renderable_deinit(&game->win_pic);
+	renderable_deinit(&game->loose_pic);
 	for(int i=0; i<COIN_COUNT; i++) {
 		void *ptr;
 		cc_array_get_at(game->coins, i, &ptr);

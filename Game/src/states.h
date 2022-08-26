@@ -5,6 +5,8 @@ typedef enum States {
 	PLAY,
 	PAUSE,
 	CONFIRM_QUIT,
+	WIN,
+	LOOSE,
 }States;
 
 typedef enum Player_States {

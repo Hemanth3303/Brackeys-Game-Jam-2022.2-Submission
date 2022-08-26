@@ -28,10 +28,10 @@ void main() {
 	// color=texColor;
 
 	if(lighting_type==0) {
-		color=texColor*fs_in.color*intensity;
+		color=texColor*fs_in.color*intensity*vec4(0, 0.6, 0.7, 1);
 	}
 	else if(lighting_type==1) {
-		color=texColor*fs_in.color*intensity*vec4(1, 0, 0.5, 1);
+		color=texColor*fs_in.color*intensity;
 	}
 	else {
 		color=texColor;
