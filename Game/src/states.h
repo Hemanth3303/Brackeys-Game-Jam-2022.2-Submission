@@ -1,10 +1,9 @@
 #pragma once
 
 typedef enum States {
-	MENU=0,
-	PLAY,
+	PLAY=0,
 	PAUSE,
-	CONFIRM_QUIT,
+	MENU,
 	WIN,
 	LOOSE,
 }States;

@@ -13,7 +13,7 @@ in DATA {
 uniform sampler2D tex;
 uniform int lighting_type=0;
 
-const float INTENSITY_SCALE=30;
+const float INTENSITY_SCALE=60;
 
 void main() {
 	float intensity=1.0f/length(fs_in.position.xy-light_position)*INTENSITY_SCALE;

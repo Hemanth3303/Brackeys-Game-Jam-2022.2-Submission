@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <time.h>
 
-#define COIN_COUNT 1
+#define COIN_COUNT 30
 
 typedef struct Game {
 	GLFWwindow *window;
@@ -29,10 +29,10 @@ typedef struct Game {
 	Renderable2D enemy;
 	Renderable2D win_pic;
 	Renderable2D loose_pic;
+	Renderable2D menu;
 	CC_Array *coins;
 	States state;
 	Player_States player_state;
-
 }Game;
 
 

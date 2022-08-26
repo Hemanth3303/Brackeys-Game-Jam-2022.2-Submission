@@ -12,7 +12,7 @@ void game_init(Game *game) {
 	game->height=600;
 	game->title="Light-Robo";
 	game->is_running=true;
-	game->state=PLAY;
+	game->state=MENU;
 	game->player_state=OUT;
 
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -65,6 +65,7 @@ void game_init(Game *game) {
 	renderable_init(&game->enemy, (vec3){rand()%(game->width-64), rand()%(game->height-64)}, (vec2){64, 64}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/enemy.png");
 	renderable_init(&game->win_pic, (vec3){game->width/2-512/2, game->height/2-128/2, 0}, (vec2){512, 128}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/win.png");
 	renderable_init(&game->loose_pic, (vec3){game->width/2-512/2, game->height/2-128/2, 0}, (vec2){512, 128}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/loose.png");
+	renderable_init(&game->menu, (vec3){game->width/2-512/2, game->height/2-512/2, 0}, (vec2){512, 512}, (vec4){1, 1, 1, 1}, game->shader, "res/sprites/menu.png");
 
 	cc_array_new(&game->coins);
 
@@ -80,7 +81,7 @@ void game_init(Game *game) {
 
 void game_handle_inputs(Game *game) {
 	if(glfwGetKey(game->window, GLFW_KEY_ESCAPE)==GLFW_PRESS) {
-		if(game->state==MENU){
+		if(game->state==PAUSE){
 			glfwSetWindowShouldClose(game->window, true);
 		}
 		else if(game->state==PLAY) {
@@ -89,12 +90,14 @@ void game_handle_inputs(Game *game) {
 	}
 
 	if(glfwGetKey(game->window, GLFW_KEY_ENTER)==GLFW_PRESS) {
-		if(game->state==MENU){
+		if(game->state==PAUSE){
 			game->state=PLAY;
 		}
-		else if(game->state==PAUSE) {
-			game->state=PLAY;
-		}
+	}
+
+	if(glfwGetKey(game->window, GLFW_KEY_SPACE)==GLFW_PRESS && game->state==MENU) {
+		game->state=PLAY;
+		game->player_state=NORMAL;
 	}
 
 	if(glfwGetKey(game->window, GLFW_KEY_F)==GLFW_PRESS && game->state==PLAY) {
@@ -103,6 +106,11 @@ void game_handle_inputs(Game *game) {
 
 	if(glfwGetKey(game->window, GLFW_KEY_G)==GLFW_PRESS && game->state==PLAY) {
 		game->player_state=SEARCH;
+	}
+
+	if(glfwGetKey(game->window, GLFW_KEY_R)==GLFW_PRESS && (game->state==LOOSE || game->state==WIN)) {
+		game_deinit(game);
+		game_init(game);
 	}
 
 	glfwPollEvents();
@@ -128,7 +136,7 @@ void game_update(Game *game, float dt) {
 		game->enemy.position[1]=glm_lerp(game->enemy.position[1], game->player.position[1], 0.0003);
 	}
 	
-	if(game->state!=WIN
+	if(game->state==PLAY
 	&& game->player.position[0]+game->player.size[0]-9>game->enemy.position[0]+16
 	&& game->player.position[0]+9<game->enemy.position[0]+game->enemy.size[0]-16
 	&& game->player.position[1]+game->player.size[1]-9>game->enemy.position[1]+16
@@ -146,12 +154,10 @@ void game_update(Game *game, float dt) {
 					renderable_deinit(coin);
 				}
 			}
+			else {
+				game->state=WIN;
+			}
 		}
-	}
-
-	if(cc_array_size(game->coins)==0) {
-		game->state==WIN;
-		printf("win\n");
 	}
 
 }
@@ -183,16 +189,29 @@ void game_render(Game *game) {
 			}
 		}
 	}
+
 	if(game->player_state==SEARCH) {
 		simple_renderer2d_submit(game->renderer, &game->enemy);
 	}
+
 	simple_renderer2d_submit(game->renderer, &game->player);
 
 	if(game->state==WIN) {
 		simple_renderer2d_submit(game->renderer, &game->win_pic);
+		shader_enable(game->shader);
+		shader_set_uniform2f(game->shader,"light_position", (vec2){game->width/2, game->height/2});
+		shader_disable();
 	}
+
 	if(game->state==LOOSE) {
 		simple_renderer2d_submit(game->renderer, &game->loose_pic);
+		shader_enable(game->shader);
+		shader_set_uniform2f(game->shader,"light_position", (vec2){game->width/2, game->height/2});
+		shader_disable();
+	}
+
+	if(game->state==MENU) {
+		simple_renderer2d_submit(game->renderer, &game->menu);
 	}
 
 	simple_renderer2d_flush(game->renderer);
@@ -207,6 +226,7 @@ void game_deinit(Game *game) {
 	renderable_deinit(&game->enemy);
 	renderable_deinit(&game->win_pic);
 	renderable_deinit(&game->loose_pic);
+	renderable_deinit(&game->menu);
 	for(int i=0; i<COIN_COUNT; i++) {
 		void *ptr;
 		cc_array_get_at(game->coins, i, &ptr);
