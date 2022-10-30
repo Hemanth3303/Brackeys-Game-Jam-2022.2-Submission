@@ -45,7 +45,7 @@ project "glfw"
 	targetdir("%{wks.location}/bin/" ..outputdir)
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
 	systemversion "latest"
-	staticruntime "Off"
+	staticruntime "On"
 
 	includedirs { "%{prj.location}/include" }
 	
@@ -121,7 +121,7 @@ project "glad"
 	location "%{wks.location}/vendor/glad"
 	targetdir("%{wks.location}/bin/" ..outputdir)
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
-	staticruntime "Off"
+	staticruntime "On"
 	systemversion "latest"
 
 	files { "%{prj.location}/src/glad.c" }
@@ -135,7 +135,7 @@ project "stb"
 	location "%{wks.location}/vendor/stb"
 	targetdir("%{wks.location}/bin/" ..outputdir)
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
-	staticruntime "Off"
+	staticruntime "On"
 	systemversion "latest"
 
 	files { "%{prj.location}/src/*.c", "%{prj.location}/include/*.h" }
@@ -149,7 +149,7 @@ project "collections-c"
 	location "%{wks.location}/vendor/collections-c"
 	targetdir("%{wks.location}/bin/" ..outputdir)
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
-	staticruntime "Off"
+	staticruntime "On"
 	systemversion "latest"
 
 	files { "%{prj.location}/src/**.c", "%{prj.location}/src/**.h", }
@@ -162,7 +162,7 @@ project "Game"
 	cdialect "C17"
 	targetdir("%{wks.location}/bin/" ..outputdir)
 	objdir ("%{wks.location}/bin-int/" ..outputdir)
-	staticruntime "Off"
+	staticruntime "On"
 	systemversion "latest"
 	targetname "Light-Robo"
 
@@ -196,7 +196,7 @@ project "Game"
 		defines { "_CRT_SECURE_NO_WARNINGS" }
 
 	filter { "action: not vs*", "configurations:Release" }
-		buildoptions { "-std=c++20", "-Os" }
+		buildoptions { "-std=c++20 -static -static-libgcc -static-libstdc++x", "-Os" }
 
 	filter { "action: not vs*", "configurations:Debug" }
 		buildoptions { "-std=c++20" }
