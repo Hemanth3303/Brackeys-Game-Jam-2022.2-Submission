@@ -227,11 +227,6 @@ void game_deinit(Game *game) {
 	renderable_deinit(&game->win_pic);
 	renderable_deinit(&game->loose_pic);
 	renderable_deinit(&game->menu);
-	for(int i=0; i<COIN_COUNT; i++) {
-		void *ptr;
-		cc_array_get_at(game->coins, i, &ptr);
-		free(ptr);
-	}
 	cc_array_destroy(game->coins);
 	simple_renderer2d_deinit(game->renderer);
 
